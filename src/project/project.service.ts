@@ -11,26 +11,30 @@ export class ProjectService {
     @InjectRepository(Project) private projectRepository: Repository<Project>,
   ) {}
   create(Project: CreateProjectInput): Promise<Project> {
-    // return 'This action adds a new project';
     const proj = this.projectRepository.create(Project);
     return this.projectRepository.save(proj); // You can directly use this without create depends on DTO
   }
 
   async findAll(): Promise<Project[]> {
-    // return `This action returns all project`;
-    return this.projectRepository.find();
+    return this.projectRepository.find({
+      relations: ['employees'],
+    });
   }
 
   async findOne(id: string): Promise<Project> {
-    // return `This action returns a #${id} project`;
-    return this.projectRepository.findOne({ where: { id } });
+    return this.projectRepository.findOne({
+      where: { id },
+      relations: ['employees'],
+    });
   }
 
   update(id: string, updateProjectInput: UpdateProjectInput) {
-    return `This action updates a #${id} project`;
+    const project: Project = this.projectRepository.create(updateProjectInput);
+    project.id = id;
+    return this.projectRepository.save(project);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} project`;
+    return this.projectRepository.delete(id);
   }
 }
