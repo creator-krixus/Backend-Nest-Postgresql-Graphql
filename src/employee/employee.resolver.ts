@@ -14,6 +14,10 @@ import { EmployeeCreateDTO } from './dto/create-employee-input';
 @Resolver(() => Employee)
 export class EmployeeResolver {
   constructor(private employeeService: EmployeeService) {}
+  @Mutation(() => Employee, { name: 'createEmployee' })
+  create(@Args('employeeInput') employee: EmployeeCreateDTO) {
+    return this.employeeService.create(employee);
+  }
   @Query(() => [Employee], { name: 'getAllEmployyees' })
   findAll() {
     return this.employeeService.findAll();
@@ -21,10 +25,6 @@ export class EmployeeResolver {
   @Query(() => Employee, { name: 'getEmployee' })
   findOne(@Args('id') id: string) {
     return this.employeeService.findOne(id);
-  }
-  @Mutation(() => Employee, { name: 'createEmployee' })
-  create(@Args('employeeInput') employee: EmployeeCreateDTO) {
-    return this.employeeService.create(employee);
   }
   @Mutation(() => Employee)
   updateEmployee(@Args('employee') employee: EmployeeCreateDTO) {
